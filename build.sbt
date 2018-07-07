@@ -21,7 +21,7 @@ val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
 val slf4jLib = "org.slf4j" % "slf4j-api" % slf4jVersion
 
 val defaultProjectSettings = Seq(
-  scalaVersion := "2.12.4",
+  scalaVersion := "0.9.0-RC1",
   crossScalaVersions := Seq("2.11.11", "2.12.4")
 )
 
@@ -34,7 +34,7 @@ val baseSettings = Seq(
     // See http://www.scala-sbt.org/0.13/docs/Testing.html#JUnit
     "com.novocode" % "junit-interface" % "0.11" % "test",
     "org.mockito" % "mockito-all" % "1.10.19" % "test",
-    "org.scalatest" %% "scalatest" % "3.0.0" % "test"
+    ("org.scalatest" %% "scalatest" % "3.0.0" % "test").withDottyCompat(scalaVersion.value)
   ),
 
   ScoverageKeys.coverageHighlighting := true,
@@ -43,13 +43,14 @@ val baseSettings = Seq(
 
   scalacOptions := Seq(
     // Note: Add -deprecation when deprecated methods are removed
-    "-target:jvm-1.8",
+    // "-target:jvm-1.8",
     "-unchecked",
     "-feature",
     "-encoding", "utf8",
     // Needs -missing-interpolator due to https://issues.scala-lang.org/browse/SI-8761
-    "-Xlint:-missing-interpolator"
+    // "-Xlint:-missing-interpolator"
   ),
+  scalacOptions ++= { if (isDotty.value) Seq("-language:Scala2") else Nil },
 
   // Note: Use -Xlint rather than -Xlint:unchecked when TestThriftStructure
   // warnings are resolved
@@ -225,9 +226,9 @@ lazy val utilCore = Project(
   libraryDependencies ++= Seq(
     caffeineLib % "test",
     scalacheckLib,
-    "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+    // "org.scala-lang" % "scala-reflect" % scalaVersion.value,
     "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
-  ),
+  ).map(_.withDottyCompat(scalaVersion.value)),
   resourceGenerators in Compile += Def.task {
     val projectName = name.value
     val file = resourceManaged.value / "com" / "twitter" / projectName / "build.properties"
