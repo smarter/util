@@ -53,7 +53,7 @@ public abstract class AbstractCloseAwaitably extends AbstractClosable implements
    * @see com.twitter.util.Awaitable#ready(Duration, com.twitter.util.Awaitable.CanAwait)
    */
   @Override
-  public Awaitable<BoxedUnit> ready(Duration timeout, CanAwait permit) throws TimeoutException, InterruptedException {
+  public Awaitable<BoxedUnit> ready(Duration timeout, CanAwait permit) /*throws TimeoutException, InterruptedException*/ {
     onClose.ready(timeout, permit);
     return this;
   }
