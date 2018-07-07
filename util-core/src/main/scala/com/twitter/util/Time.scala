@@ -552,10 +552,11 @@ class TimeFormat(
  * @see [[Stopwatch]] for measuring elapsed time.
  * @see [[TimeFormat]] for converting to and from `String` representations.
  */
-sealed class Time private[util] (protected val nanos: Long) extends {
-  protected val ops = Time
-} with TimeLike[Time] with Serializable {
+sealed class Time private[this] (protected val nanos: Long, protected val ops: Time.type)
+    extends TimeLike[Time] with Serializable {
   import ops._
+
+  private[util] def this(nanos: Long) = this(nanos, Time)
 
   def inNanoseconds: Long = nanos
 

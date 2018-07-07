@@ -301,10 +301,11 @@ private[util] object DurationBox {
  * their arithmetic follows. This is useful for representing durations
  * that are truly infinite; for example the absence of a timeout.
  */
-sealed class Duration private[util] (protected val nanos: Long) extends {
-  protected val ops = Duration
-} with TimeLike[Duration] with Serializable {
+sealed class Duration private[this] (protected val nanos: Long, protected val ops: Duration.type)
+    extends TimeLike[Duration] with Serializable {
   import ops._
+
+  private[util] def this(nanos: Long) = this(nanos, Duration)
 
   def inNanoseconds: Long = nanos
 
