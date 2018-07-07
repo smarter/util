@@ -129,52 +129,53 @@ trait Config[T] extends (() => T) {
    *       See `ConfigTest` for an example.
    */
   def missingValues: Seq[String] = {
-    val alreadyVisited = mutable.Set[AnyRef]()
-    val interestingReturnTypes = Seq(classOf[Required[_]], classOf[Config[_]], classOf[Option[_]])
-    val buf = new mutable.ListBuffer[String]
-    val mirror = scala.reflect.runtime.universe.runtimeMirror(getClass.getClassLoader)
-    def collect(prefix: String, config: Config[_]): Unit = {
-      if (!alreadyVisited.contains(config)) {
-        alreadyVisited += config
-        val nullaryMethods = config.getClass.getMethods.toSeq filter { _.getParameterTypes.isEmpty }
-        val syntheticTermNames: Set[String] = {
-          val configSymbol = mirror.reflect(config).symbol
-          val configMembers = configSymbol.toType.members
-          configMembers.collect {
-            case symbol if symbol.isTerm && symbol.isSynthetic =>
-              symbol.name.decodedName.toString
-          }(scala.collection.breakOut)
-        }
-        for (method <- nullaryMethods) {
-          val name = method.getName
-          val rt = method.getReturnType
-          if (name != "required" &&
-            name != "optional" &&
-            !syntheticTermNames.contains(name) && // no loops, no compiler generated methods!
-            interestingReturnTypes.exists(_.isAssignableFrom(rt))) {
-            method.invoke(config) match {
-              case Unspecified =>
-                buf += (prefix + name)
-              case specified: Specified[_] =>
-                specified match {
-                  case Specified(sub: Config[_]) =>
-                    collect(prefix + name + ".", sub)
-                  case Specified(Some(sub: Config[_])) =>
-                    collect(prefix + name + ".", sub)
-                  case _ =>
-                }
-              case sub: Config[_] =>
-                collect(prefix + name + ".", sub)
-              case Some(sub: Config[_]) =>
-                collect(prefix + name + ".", sub)
-              case _ =>
-            }
-          }
-        }
-      }
-    }
-    collect("", this)
-    buf.toList
+    ???
+    // val alreadyVisited = mutable.Set[AnyRef]()
+    // val interestingReturnTypes = Seq(classOf[Required[_]], classOf[Config[_]], classOf[Option[_]])
+    // val buf = new mutable.ListBuffer[String]
+    // val mirror = scala.reflect.runtime.universe.runtimeMirror(getClass.getClassLoader)
+    // def collect(prefix: String, config: Config[_]): Unit = {
+    //   if (!alreadyVisited.contains(config)) {
+    //     alreadyVisited += config
+    //     val nullaryMethods = config.getClass.getMethods.toSeq filter { _.getParameterTypes.isEmpty }
+    //     val syntheticTermNames: Set[String] = {
+    //       val configSymbol = mirror.reflect(config).symbol
+    //       val configMembers = configSymbol.toType.members
+    //       configMembers.collect {
+    //         case symbol if symbol.isTerm && symbol.isSynthetic =>
+    //           symbol.name.decodedName.toString
+    //       }(scala.collection.breakOut)
+    //     }
+    //     for (method <- nullaryMethods) {
+    //       val name = method.getName
+    //       val rt = method.getReturnType
+    //       if (name != "required" &&
+    //         name != "optional" &&
+    //         !syntheticTermNames.contains(name) && // no loops, no compiler generated methods!
+    //         interestingReturnTypes.exists(_.isAssignableFrom(rt))) {
+    //         method.invoke(config) match {
+    //           case Unspecified =>
+    //             buf += (prefix + name)
+    //           case specified: Specified[_] =>
+    //             specified match {
+    //               case Specified(sub: Config[_]) =>
+    //                 collect(prefix + name + ".", sub)
+    //               case Specified(Some(sub: Config[_])) =>
+    //                 collect(prefix + name + ".", sub)
+    //               case _ =>
+    //             }
+    //           case sub: Config[_] =>
+    //             collect(prefix + name + ".", sub)
+    //           case Some(sub: Config[_]) =>
+    //             collect(prefix + name + ".", sub)
+    //           case _ =>
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+    // collect("", this)
+    // buf.toList
   }
 
   /**
