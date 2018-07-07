@@ -45,7 +45,7 @@ public final class Activities {
    */
   @SuppressWarnings("unchecked")
   public static <T> Activity<T> newPendingActivity() {
-    return (Activity<T>) Activity$.MODULE$.pending();
+    return (Activity<T>) Activity$.MODULE$.pending0();
   }
 
   /**
@@ -53,7 +53,7 @@ public final class Activities {
    */
   @SuppressWarnings("unchecked")
   public static <T> Activity<T> newFailedActivity(Throwable throwable) {
-    return (Activity<T>) Activity$.MODULE$.exception(throwable);
+    return (Activity<T>) Activity$.MODULE$.exception0(throwable);
   }
 
   /**

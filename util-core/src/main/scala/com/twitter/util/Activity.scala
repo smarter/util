@@ -1006,10 +1006,14 @@ object Activity {
    */
   def exception(exc: Throwable): Activity[Nothing] = Activity(Var.value(Failed(exc)))
 
+  def exception0(exc: Throwable): Activity[_] = exception(exc)
+
   /**
    * A static Activity that is pending.
    */
   val pending: Activity[Nothing] = Activity(Var.value(Pending))
+
+  val pending0: Activity[_] = pending.asInstanceOf
 
   /**
    * An ADT describing the state of an Activity.
