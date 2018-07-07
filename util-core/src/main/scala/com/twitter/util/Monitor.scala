@@ -104,8 +104,9 @@ abstract class AbstractMonitor extends Monitor
  * utilities.
  *
  * Java users should use the `Monitors` class.
- */
-object Monitor extends Monitor {
+  */
+object Monitor extends MonitorObject
+class MonitorObject extends Monitor {
   private[this] val local = new Local[Monitor]
 
   /**
