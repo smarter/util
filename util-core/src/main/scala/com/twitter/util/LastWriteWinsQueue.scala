@@ -41,7 +41,7 @@ class LastWriteWinsQueue[A] extends java.util.Queue[A] {
     } else Array[Any]().asInstanceOf[Array[T with java.lang.Object]]
   }
 
-  def toArray = toArray(new Array[AnyRef](0))
+  def toArray: Array[AnyRef] = toArray(new Array[AnyRef](0))
 
   def iterator = null
 
