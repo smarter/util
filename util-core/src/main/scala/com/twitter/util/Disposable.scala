@@ -94,11 +94,12 @@ trait Managed[+T] { selfT =>
    * Compose a new managed resource that depends on `this' managed resource.
    */
   def flatMap[U](f: T => Managed[U]): Managed[U] = new Managed[U] {
+    val f2 = f // Workaround crash in LambdaLift
     def make() = new Disposable[U] {
       val t = selfT.make()
 
       val u = try {
-        f(t.get).make()
+        f2(t.get).make()
       } catch {
         case e: Exception =>
           t.dispose()
