@@ -133,7 +133,7 @@ object Promise {
    * A template trait for [[com.twitter.util.Promise Promises]] that are derived
    * and capable of being detached from other Promises.
    */
-  trait Detachable { _: Promise[_] =>
+  trait Detachable { self: Promise[_] =>
 
     /**
      * Returns true if successfully detached, will return true at most once.
